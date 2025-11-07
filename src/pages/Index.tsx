@@ -68,9 +68,13 @@ const Index = () => {
 
   const [realEstate, setRealEstate] = useState<Asset[]>(savedGame?.realEstate ?? [
     { id: '1', name: 'Студия', price: 100, income: 1, owned: 0, icon: 'Home', description: '+1₽/сек' },
-    { id: '2', name: 'Квартира', price: 500, income: 5, owned: 0, icon: 'Building2', description: '+5₽/сек' },
-    { id: '3', name: 'Пентхаус', price: 2500, income: 30, owned: 0, icon: 'Castle', description: '+30₽/сек' },
-    { id: '4', name: 'Особняк', price: 10000, income: 150, owned: 0, icon: 'Hotel', description: '+150₽/сек' },
+    { id: '2', name: '1-комнатная квартира', price: 300, income: 3, owned: 0, icon: 'Building', description: '+3₽/сек' },
+    { id: '3', name: '2-комнатная квартира', price: 700, income: 8, owned: 0, icon: 'Building2', description: '+8₽/сек' },
+    { id: '4', name: '3-комнатная квартира', price: 1500, income: 18, owned: 0, icon: 'Home', description: '+18₽/сек' },
+    { id: '5', name: 'Пентхаус', price: 3500, income: 45, owned: 0, icon: 'Castle', description: '+45₽/сек' },
+    { id: '6', name: 'Таунхаус', price: 8000, income: 110, owned: 0, icon: 'Home', description: '+110₽/сек' },
+    { id: '7', name: 'Особняк', price: 20000, income: 280, owned: 0, icon: 'Hotel', description: '+280₽/сек' },
+    { id: '8', name: 'Вилла', price: 50000, income: 750, owned: 0, icon: 'Castle', description: '+750₽/сек' },
   ]);
 
   const [vehicles, setVehicles] = useState<Asset[]>(savedGame?.vehicles ?? [
