@@ -27,20 +27,53 @@ interface Achievement {
   icon: string;
 }
 
-const Index = () => {
-  const [balance, setBalance] = useState(0);
-  const [totalClicks, setTotalClicks] = useState(0);
-  const [incomePerSecond, setIncomePerSecond] = useState(0);
-  const [clickPower, setClickPower] = useState(1);
+const SAVE_KEY = 'financial_empire_save';
 
-  const [realEstate, setRealEstate] = useState<Asset[]>([
+interface GameState {
+  balance: number;
+  totalClicks: number;
+  clickPower: number;
+  realEstate: Asset[];
+  vehicles: Asset[];
+  achievements: Achievement[];
+}
+
+const loadGame = (): Partial<GameState> | null => {
+  try {
+    const saved = localStorage.getItem(SAVE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error('Ошибка загрузки:', e);
+  }
+  return null;
+};
+
+const saveGame = (state: GameState) => {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error('Ошибка сохранения:', e);
+  }
+};
+
+const Index = () => {
+  const savedGame = loadGame();
+  
+  const [balance, setBalance] = useState(savedGame?.balance ?? 0);
+  const [totalClicks, setTotalClicks] = useState(savedGame?.totalClicks ?? 0);
+  const [incomePerSecond, setIncomePerSecond] = useState(0);
+  const [clickPower, setClickPower] = useState(savedGame?.clickPower ?? 1);
+
+  const [realEstate, setRealEstate] = useState<Asset[]>(savedGame?.realEstate ?? [
     { id: '1', name: 'Студия', price: 100, income: 1, owned: 0, icon: 'Home', description: '+1₽/сек' },
     { id: '2', name: 'Квартира', price: 500, income: 5, owned: 0, icon: 'Building2', description: '+5₽/сек' },
     { id: '3', name: 'Пентхаус', price: 2500, income: 30, owned: 0, icon: 'Castle', description: '+30₽/сек' },
     { id: '4', name: 'Особняк', price: 10000, income: 150, owned: 0, icon: 'Hotel', description: '+150₽/сек' },
   ]);
 
-  const [vehicles, setVehicles] = useState<Asset[]>([
+  const [vehicles, setVehicles] = useState<Asset[]>(savedGame?.vehicles ?? [
     { id: '1', name: 'Велосипед', price: 50, income: 0.5, owned: 0, icon: 'Bike', description: '+0.5₽/сек' },
     { id: '2', name: 'Мотоцикл', price: 300, income: 3, owned: 0, icon: 'Bike', description: '+3₽/сек' },
     { id: '3', name: 'Седан', price: 1500, income: 20, owned: 0, icon: 'Car', description: '+20₽/сек' },
@@ -54,7 +87,7 @@ const Index = () => {
     { id: '3', name: 'Усилитель кликов x10', price: 5000, multiplier: 10, icon: 'Sparkles' },
   ]);
 
-  const [achievements, setAchievements] = useState<Achievement[]>([
+  const [achievements, setAchievements] = useState<Achievement[]>(savedGame?.achievements ?? [
     { id: '1', name: 'Первый клик', description: 'Сделать 1 клик', goal: 1, current: 0, completed: false, icon: 'MousePointer2' },
     { id: '2', name: 'Начинающий', description: 'Сделать 100 кликов', goal: 100, current: 0, completed: false, icon: 'Target' },
     { id: '3', name: 'Любитель', description: 'Сделать 1000 кликов', goal: 1000, current: 0, completed: false, icon: 'Award' },
@@ -74,6 +107,18 @@ const Index = () => {
     const totalIncome = [...realEstate, ...vehicles].reduce((sum, asset) => sum + asset.income * asset.owned, 0);
     setIncomePerSecond(totalIncome);
   }, [realEstate, vehicles]);
+
+  useEffect(() => {
+    const gameState: GameState = {
+      balance,
+      totalClicks,
+      clickPower,
+      realEstate,
+      vehicles,
+      achievements,
+    };
+    saveGame(gameState);
+  }, [balance, totalClicks, clickPower, realEstate, vehicles, achievements]);
 
   useEffect(() => {
     setAchievements(prev => prev.map(ach => {
