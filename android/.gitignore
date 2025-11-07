@@ -1,0 +1,26 @@
+# Android Studio
+.idea/
+.gradle/
+local.properties
+*.iml
+*.iws
+*.ipr
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Gradle
+build/
+.gradle/
+
+# Local configuration
+local.properties
+
+# Signing files
+*.jks
+*.keystore
+
+# Google Services
+google-services.json
